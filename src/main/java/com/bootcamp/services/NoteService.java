@@ -1,22 +1,21 @@
 package com.bootcamp.services;
 
+
 import com.bootcamp.commons.constants.DatabaseConstants;
 import com.bootcamp.commons.enums.EntityType;
 import com.bootcamp.commons.enums.NoteType;
 import com.bootcamp.commons.models.Criteria;
 import com.bootcamp.commons.models.Criterias;
 import com.bootcamp.commons.models.Rule;
-import com.bootcamp.commons.ws.usecases.pivotone.NoteWS;
 import com.bootcamp.crud.NoteCRUD;
 import com.bootcamp.entities.Note;
-//import org.eclipse.persistence.internal.helper.Helper;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by darextossa on 11/27/17.
+ * Created by Moh on 11/27/17.
  */
 @Component
 public class NoteService implements DatabaseConstants {
@@ -46,13 +45,11 @@ public class NoteService implements DatabaseConstants {
         return notes.get(0);
     }
     
-    public double getMoyenneByEntity(int entityId, EntityType entityType) throws SQLException {
+    public double getMoyenne() throws SQLException {
         double moyenne = 0;
         int count = 0;
-        Criterias criterias = new Criterias();
-        criterias.addCriteria(new Criteria(new Rule("entityId", "=", entityId), "AND"));
-        criterias.addCriteria(new Criteria(new Rule("entityType", "=", entityType), null));
-        List<Note> notes = NoteCRUD.read(criterias);
+
+        List<Note> notes = NoteCRUD.read();
         for (Note note : notes){
             NoteType noteType = NoteType.valueOf(note.getNoteType());
             int n = noteType.ordinal()+1;
@@ -61,38 +58,34 @@ public class NoteService implements DatabaseConstants {
         }
         return moyenne/count;
     }
-    
-    public int getNoteCounts(int entityId, EntityType entityType, NoteType noteType) throws SQLException {
+
+    public int getNoteCountsByNoteType(NoteType noteType) throws SQLException {
         int count = 0;
         Criterias criterias = new Criterias();
-        criterias.addCriteria(new Criteria(new Rule("entityId", "=", entityId), "AND"));
-        criterias.addCriteria(new Criteria(new Rule("entityType", "=", entityType), "AND"));
         criterias.addCriteria(new Criteria(new Rule("noteType", "=", noteType), null));
         count = NoteCRUD.read(criterias).size();
         return count;
     }
     
-    public int getNotesCountsByEntity(NoteType noteType, EntityType entityType) throws SQLException {
+    public int getNotesCounts() throws SQLException {
         int count = 0;
         Criterias criterias = new Criterias();
-        criterias.addCriteria(new Criteria(new Rule("noteType", "=", noteType), "AND"));
-        criterias.addCriteria(new Criteria(new Rule("entityType", "=", entityType), null));
         count = NoteCRUD.read(criterias).size();
         return count;
     }
-    
-    public NoteWS getNotes(int entityId, EntityType entityType) throws SQLException {
+
+    public NoteWS getNotes() throws SQLException {
         NoteWS noteWS = new NoteWS();
-        
-        noteWS.setEntityId(entityId);
-        noteWS.setEntityType(entityType);
-        noteWS.setMoyenne(this.getMoyenneByEntity(entityId, entityType));
-        noteWS.setNoteOneCounts(this.getNoteCounts(entityId, entityType, NoteType.UN));
-        noteWS.setNoteTwoCounts(this.getNoteCounts(entityId, entityType, NoteType.DEUX));
-        noteWS.setNoteThreeCounts(this.getNoteCounts(entityId, entityType, NoteType.TROIS));
-        noteWS.setNoteFourCounts(this.getNoteCounts(entityId, entityType, NoteType.QUATRE));
-        noteWS.setNoteFiveCounts(this.getNoteCounts(entityId, entityType, NoteType.CINQ));
-        
+
+        noteWS.setMoyenne(this.getMoyenne());
+        noteWS.setNoteOneCounts(this.getNoteCountsByNoteType( NoteType.UN));
+        noteWS.setNoteTwoCounts(this.getNoteCountsByNoteType( NoteType.DEUX));
+        noteWS.setNoteThreeCounts(this.getNoteCountsByNoteType(NoteType.TROIS));
+        noteWS.setNoteFourCounts(this.getNoteCountsByNoteType( NoteType.QUATRE));
+        noteWS.setNoteFiveCounts(this.getNoteCountsByNoteType(NoteType.CINQ));
+
         return noteWS;
     }
+    
+
 }

@@ -15,6 +15,6 @@ public class HomeController {
 
     @RequestMapping("/")
     public String index() {
-        return "RestController Note";
+        return "Service d'appréciation du VBG";
     }
 }

@@ -1,10 +1,4 @@
-/**
- * Copyright (c) 2016, AskLytics and/or its affiliates. All rights reserved.
- * <p>
- * ASKLYTICS PROPRIETARY/CONFIDENTIAL. Use is subject to Non-Disclosure Agreement.
- * <p>
- * Created by bilalshah on 20/12/2016
- */
+
 package com.bootcamp.application;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +25,7 @@ import java.util.Locale;
 @Configuration
 @ComponentScan({"com.bootcamp"})
 @PropertySources({
-        @PropertySource(value = "classpath:/note.sf.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "classpath:/note.properties", ignoreResourceNotFound = true),
 })
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, FlywayAutoConfiguration.class})
 @EnableCaching

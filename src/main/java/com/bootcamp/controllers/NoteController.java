@@ -1,9 +1,10 @@
 package com.bootcamp.controllers;
 
 import com.bootcamp.commons.enums.EntityType;
-import com.bootcamp.commons.ws.usecases.pivotone.NoteWS;
+
 import com.bootcamp.entities.Note;
 import com.bootcamp.services.NoteService;
+import com.bootcamp.services.NoteWS;
 import com.bootcamp.version.ApiVersions;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +39,7 @@ public class NoteController {
 
         HttpStatus httpStatus = null;
 
-        int id = -1;
+        int id = 0;
         try {
             id = noteService.create(note);
             httpStatus = HttpStatus.OK;
@@ -68,17 +69,17 @@ public class NoteController {
         return new ResponseEntity<Note>(note, httpStatus);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{entityType}/{entityId}")
+    @RequestMapping(method = RequestMethod.GET)
     @ApiVersions({"1.0"})
-    @ApiOperation(value = "Get all notes of an entity", notes = "Get all notes of an entity")
+    @ApiOperation(value = "Get all notes on the platform", notes = "Get all notes on the platform")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<NoteWS> readByEntity(@PathVariable("entityId") int entityId, @PathVariable("entityType") String entityType) {
-        EntityType entite = EntityType.valueOf(entityType);
+    public ResponseEntity<NoteWS> readByEntity() {
+
         NoteWS noteWS = new NoteWS();
         HttpStatus httpStatus = null;
 
         try {
-            noteWS = noteService.getNotes(entityId, entite);
+            noteWS = noteService.getNotes();
             httpStatus = HttpStatus.OK;
         } catch (SQLException ex) {
             Logger.getLogger(NoteController.class.getName()).log(Level.SEVERE, null, ex);
